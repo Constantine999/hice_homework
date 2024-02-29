@@ -2,12 +2,9 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
-# Задаём проверку на буквы
-PATTERN = r"^[а-яА-Яa-zA-ZёЁ]+$"
-
 
 class Info(BaseModel):
-    name: str = Field(pattern=PATTERN, title="Имя отправителя")
+    name: str = Field(title="Имя отправителя")
     text: str = Field(title="Текст сообщения")
 
 
