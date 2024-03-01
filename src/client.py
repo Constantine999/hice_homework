@@ -1,42 +1,44 @@
 import asyncio
-import random
-import aiohttp
+from random import choice
 from time import perf_counter
 
-lock = asyncio.Lock()
+import aiohttp
 
 
 def get_senders() -> list[dict[str, str]]:
-    """Сгенериует список из 100 словарей"""
-
-    SENDERS = ("Джеймс Гослинг", "Деннис Ритчи", "Бьёрн Страуструп", "Гвидо ван Россум", "Брендан Эйх",
-               "Ларри Уолл", "Расмус Лердорф", "Юкихиро Мацумото", "Джон Маккарти", "Никлаус Вирт")
+    """Генерирует список из 100 словарей с рандомными значениями"""
+    SENDERS: tuple[str] = \
+        ("Джеймс Гослинг", "Деннис Ритчи", "Бьёрн Страуструп", "Гвидо ван Россум", "Брендан Эйх",
+         "Ларри Уолл", "Расмус Лердорф", "Юкихиро Мацумото", "Джон Маккарти", "Никлаус Вирт")
 
     with open("./text.txt", encoding="utf-8") as text:
         result: list[str] = list(map(str.strip, text.readlines()))
 
-    return [dict(name=random.choice(SENDERS), text=random.choice(result)) for _ in range(100)]
+    return [dict(name=choice(SENDERS), text=choice(result)) for _ in range(100)]
 
 
-async def send_large_data(data_to_send: dict[str, str]):
-    async with lock:
-        async with aiohttp.ClientSession() as session:
-            port = random.choice((7000, 8000))
-            await session.post(url=f"http://127.0.0.1:{port}/api/v1/", json=data_to_send)
+async def send_request(data_to_send: dict[str, str]) -> None:
+    """Корутина для отправления запроса"""
+    async with aiohttp.ClientSession() as session:
+        port: int = choice((8000, 9000, 10000))
+        await session.post(
+            url=f"http://127.0.0.1:{port}/api/v1/",
+            json=data_to_send
+        )
 
 
-async def start_coroutine():
-    await asyncio.gather(*[send_large_data(sender) for sender in get_senders()])
+async def generator_group_coroutines() -> None:
+    """Генерирует группу с корутинами"""
+    await asyncio.gather(*[send_request(sender) for sender in get_senders()])
 
 
-async def main():
-    start_time = perf_counter()
-    for _ in range(50):
-        await start_coroutine()
-    duration = round(perf_counter() - start_time, 3)
+async def main() -> None:
+    start = perf_counter()
+    await asyncio.gather(*[generator_group_coroutines() for _ in range(50)])
+    duration = perf_counter() - start
 
-    print(f"Вcего прошло времени {duration=}")
-    print(f"Среднее время выполнения одного запроса {round(duration / 5000, 3)}")
+    print(f"Общая продолжительность всех запросов = {round(duration, 3)} секунд")
+    print(f"Среднее время выполнения одного запроса = {round(duration / 5000, 3)} секунд")
 
 
 asyncio.run(main())
