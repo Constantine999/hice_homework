@@ -18,7 +18,7 @@ def get_senders() -> list[dict[str, str]]:
 
 
 async def send_request(data_to_send: dict[str, str]) -> None:
-    """Корутина для отправления запроса"""
+    """Корутина для отправления запроса на сервер"""
     async with aiohttp.ClientSession() as session:
         port: int = choice((8000, 9000, 10000))
         await session.post(
@@ -33,6 +33,7 @@ async def generator_group_coroutines() -> None:
 
 
 async def main() -> None:
+    """Запускает тест"""
     start = perf_counter()
     await asyncio.gather(*[generator_group_coroutines() for _ in range(50)])
     duration = perf_counter() - start
