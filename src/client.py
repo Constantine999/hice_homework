@@ -39,8 +39,8 @@ async def main() -> None:
     await asyncio.gather(*[generator_group_coroutines() for _ in range(50)])
     duration = perf_counter() - start
 
-    print(f"Общая продолжительность всех запросов = {round(duration, 3)} секунд.")
-    print(f"Среднее время выполнения одного запроса = {round(duration / 5000, 3)} секунд.")
+    print(f"Общая продолжительность всех запросов = {round(duration, 3)} сек.")
+    print(f"Среднее время выполнения одного запроса = {round(duration / 5000, 3)} сек.")
 
 
 for _ in range(10):
