@@ -14,7 +14,8 @@ trigger = DDL(
         SET messages_count = (SELECT COUNT(*) FROM posts WHERE name = NEW.name)
         WHERE sequence_number = NEW.sequence_number;
         END;
-    ''')
+    '''
+)
 
 
 class Post(Base):
