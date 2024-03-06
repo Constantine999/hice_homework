@@ -26,7 +26,9 @@ async def send_request(data_to_send: dict[str, str]) -> None:
         port: int = choice(PORTS)
         await session.post(
             url=f"http://127.0.0.1:{port}/api/v1/client/",
-            json=data_to_send
+            json=data_to_send,
+            ssl=False
+
         )
 
 
@@ -37,11 +39,13 @@ async def generator_group_coroutines() -> None:
 
 async def main() -> None:
     """Запускает тест"""
+    print("Тест запущен...\nИдёт отправка запросов\n")
     requests: int = 5000
     start = perf_counter()
     await asyncio.gather(*[generator_group_coroutines() for _ in range(50)])
     duration = perf_counter() - start
 
+    print("Тест завершен\n")
     print(f"Отправлено запросов = {requests}")
     print(f"Количество использованных серверов = {len(PORTS)}")
     print(f"Общая пропускная способность всех запросов = {round(duration, 3)} сек.")
