@@ -26,9 +26,7 @@ async def send_request(data_to_send: dict[str, str]) -> None:
         port: int = choice(PORTS)
         await session.post(
             url=f"http://127.0.0.1:{port}/api/v1/client/",
-            json=data_to_send,
-            ssl=False
-
+            json=data_to_send
         )
 
 
