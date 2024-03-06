@@ -39,7 +39,7 @@ async def generator_group_coroutines() -> None:
 
 async def main() -> None:
     """Запускает тест"""
-    print("Тест запущен...\nИдёт отправка запросов\n")
+    print("Тест запущен\nИдёт отправка запросов\nОжидаем завершения теста...\n")
     requests: int = 5000
     start = perf_counter()
     await asyncio.gather(*[generator_group_coroutines() for _ in range(50)])
