@@ -52,7 +52,8 @@ python client.py
 - если запускаем в терминале linux:
 
 ```
-ulimit -n 6000 & python client.py 
+ulimit -n 6000 
+python client.py 
 ```
 
 **Примерный результат теста:</br>**
