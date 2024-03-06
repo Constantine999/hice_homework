@@ -34,11 +34,15 @@ pip install -r requirements.txt
 ```
 
 #### Запуск серверов с портами (9000, 10000, 11000)
-
+- если запускаем в PyCharm:
 ```
 python DummyMessenger.py
 ```
-
+- если запускаем в терминале linux:
+```
+ulimit -n 10000 
+python DummyMessenger.py
+```
 #### Запуск теста
 
 _В отдельной вкладке терминала переходим в директории проекта, запускаем:_
@@ -52,7 +56,7 @@ python client.py
 - если запускаем в терминале linux:
 
 ```
-ulimit -n 6000 
+ulimit -n 10000 
 python client.py 
 ```
 
