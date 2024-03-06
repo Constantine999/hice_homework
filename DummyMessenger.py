@@ -1,5 +1,6 @@
 # ---------------------------------Импорты-------------------------------------
 import asyncio
+import time
 from multiprocessing import Process
 from contextlib import asynccontextmanager
 from datetime import datetime
@@ -13,7 +14,8 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 # -------------------Настройка подключения к БД и параметры модели ------------
-engine = create_async_engine("sqlite+aiosqlite:///database.db")
+url = "sqlite+aiosqlite:///database.db"
+engine = create_async_engine(url)
 new_session = async_sessionmaker(bind=engine)
 
 
@@ -109,4 +111,7 @@ def start_server(port: int) -> None:
 
 
 if __name__ == "__main__":
-    [Process(target=start_server, args=(port,)).start() for port in PORTS]
+    for port in PORTS:
+        time.sleep(1)
+        Process(target=start_server, args=(port,)).start()
+
