@@ -27,7 +27,7 @@ git clone https://github.com/Constantine999/hice_homework.git
 cd hice_homework
 ```
 
-#### Установка зависимостей (используя виртуальное окружения проекта)
+#### Установка зависимостей (используя виртуальное окружение проекта)
 
 ```
 pip install -r requirements.txt
