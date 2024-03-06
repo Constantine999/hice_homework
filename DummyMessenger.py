@@ -25,14 +25,13 @@ class Base(DeclarativeBase):
 
 class Post(Base):
     __tablename__ = "posts"
+    __table_args__ = (UniqueConstraint("name", "messages_count", name="unique_constraint"),)
 
     name: Mapped[str]
     text: Mapped[str]
     created: Mapped[datetime] = mapped_column(server_default=text("(DATETIME('now', 'utc'))"))
     sequence_number: Mapped[int] = mapped_column(primary_key=True)
-    messages_count: Mapped[int] = mapped_column(Integer, server_default=text("0"))
-
-    __table_args__ = (UniqueConstraint("name", "messages_count", name="unique_constraint"),)
+    messages_count: Mapped[int] = mapped_column(Integer, server_default="0")
 
 
 trigger = DDL(
@@ -114,4 +113,3 @@ if __name__ == "__main__":
     for port in PORTS:
         time.sleep(1)
         Process(target=start_server, args=(port,)).start()
-
