@@ -4,9 +4,11 @@ from time import perf_counter
 
 import aiohttp
 
+from DummyMessenger import PORTS
 
-def get_senders() -> list[dict[str, str]]:
-    """Генерирует список из 100 словарей с рандомными значениями"""
+
+def get_senders(total: int = 100) -> list[dict[str, str]]:
+    """Генерирует список из total словарей с рандомными значениями"""
     senders: tuple[str, ...] = \
         ("Джеймс Гослинг", "Деннис Ритчи", "Бьёрн Страуструп", "Гвидо ван Россум", "Брендан Эйх",
          "Ларри Уолл", "Расмус Лердорф", "Юкихиро Мацумото", "Джон Маккарти", "Никлаус Вирт"
@@ -15,15 +17,15 @@ def get_senders() -> list[dict[str, str]]:
     with open("./text.txt", encoding="utf-8") as text:
         result: list[str] = list(map(str.strip, text.readlines()))
 
-    return [dict(name=choice(senders), text=choice(result)) for _ in range(100)]
+    return [dict(name=choice(senders), text=choice(result)) for _ in range(total)]
 
 
 async def send_request(data_to_send: dict[str, str]) -> None:
     """Корутина для отправления запроса на сервер"""
     async with aiohttp.ClientSession() as session:
-        port: int = choice((9000, 10000))
+        port: int = choice(PORTS)
         await session.post(
-            url=f"http://127.0.0.1:{port}/api/v1/",
+            url=f"http://127.0.0.1:{port}/api/v1/client/",
             json=data_to_send
         )
 
@@ -35,13 +37,15 @@ async def generator_group_coroutines() -> None:
 
 async def main() -> None:
     """Запускает тест"""
+    requests: int = 5000
     start = perf_counter()
     await asyncio.gather(*[generator_group_coroutines() for _ in range(50)])
     duration = perf_counter() - start
 
-    print(f"Общая продолжительность всех запросов = {round(duration, 3)} сек.")
-    print(f"Среднее время выполнения одного запроса = {round(duration / 5000, 3)} сек.")
+    print(f"Отправлено запросов = {requests}")
+    print(f"Количество использованных серверов = {len(PORTS)}")
+    print(f"Общая пропускная способность всех запросов = {round(duration, 3)} сек.")
+    print(f"Среднее время выполнения одного запроса = {round(duration / requests, 3)} сек.")
 
 
-for _ in range(10):
-    asyncio.run(main())
+asyncio.run(main())
